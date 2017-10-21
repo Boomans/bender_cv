@@ -39,8 +39,8 @@ def diff(img_cur, img_empt):
 
     buf = {}
     result_queue = Queue()
-    img_cur = imutils.resize(img_cur, height=min(640, img_cur.shape[0]))
-    img_empt = imutils.resize(img_empt, height=min(640, img_empt.shape[0]))
+    img_cur = imutils.resize(img_cur, height=min(720, img_cur.shape[0]))
+    img_empt = imutils.resize(img_empt, height=min(720, img_empt.shape[0]))
     img_cur = cv2.cvtColor(img_cur, cv2.COLOR_BGR2GRAY)
     img_empt = cv2.cvtColor(img_empt, cv2.COLOR_BGR2GRAY)
 
@@ -72,7 +72,10 @@ def diff(img_cur, img_empt):
 
 def get_count_of_people(img_cur):
 
-    peoples = HS_Cascade.detectMultiScale(img_cur, 1.35, 1, minSize=(2, 2), maxSize=(200, 200))
+    peoples = HS_Cascade.detectMultiScale(img_cur, 1.1, 1, minSize=(30, 30), maxSize=(150, 150))
     for (x, y, w, h) in peoples:
         cv2.rectangle(img_cur, (x, y), (x + w, y + h), (0, 0, 0), 2)
+    cv2.imshow('result', img_cur)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return len(peoples)
