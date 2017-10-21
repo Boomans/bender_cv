@@ -10,8 +10,10 @@ for image_path in paths.list_images('img_empt'):
     empty_rooms_imgs[image_path.split('/')[-1]] = cv2.imread(image_path)
 for image_path in paths.list_images('img'):
     key = image_path.split('/')[-1]
-    diff_img = dff.diff(cv2.imread(image_path), empty_rooms_imgs[key])
-
+    dif_buf = dff.diff(cv2.imread(image_path), empty_rooms_imgs[key])
+    diff_img = dif_buf[0]
+    weight = dif_buf[1]
+    print(weight / 590)
     print(dff.get_count_of_people(diff_img))
 
 # print(empty_rooms_imgs)

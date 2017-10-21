@@ -21,7 +21,7 @@ def is_same_px(tup1, tup2, delta):
 
 
 def calc_dif(img1, img2, que, ind):
-
+    weigth = 0
     white = np.uint8(255)
     for i in range(1, len(img1), 2):
         for j in range(1, len(img1[0]), 2):
@@ -30,7 +30,10 @@ def calc_dif(img1, img2, que, ind):
                 img1[i-1, j] = white
                 img1[i, j-1] = white
                 img1[i-1, j-1] = white
-    que.put((img1,ind))
+            else:
+                weigth += (5 - ind) * 0.1
+
+    que.put((img1,ind, weigth))
     # print("Done")
 
 
@@ -56,10 +59,11 @@ def diff(img_cur, img_empt):
     p2.start()
     p3.start()
     p4.start()
-
+    weight = 0
     for i in range(4):
         buf_tup = result_queue.get()
         buf[buf_tup[1]] = buf_tup[0]
+        weight += (buf_tup[2])
 
     p1.join()
     p2.join()
@@ -68,7 +72,7 @@ def diff(img_cur, img_empt):
 
     img = np.vstack((np.vstack((buf[1], buf[2])),
                      np.vstack((buf[3], buf[4]))))
-    return img
+    return img, weight
 
 def get_count_of_people(img_cur):
 
