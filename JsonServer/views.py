@@ -58,7 +58,11 @@ def upload(request):
                 for chunk in f.chunks():
                     destination.write(chunk)
 
-            dif_img, weight = diff(cv2.imread('buf.jpg'), cv2.imread(src_img))
+            try:
+                dif_img, weight = diff(cv2.imread('buf.jpg'), cv2.imread(src_img))
+            except Exception:
+                response.write("<p>Invalid photo or id</p>")
+                return response
             count = get_count_of_people(dif_img)
 
             if request.GET.get('max') is None:
@@ -68,12 +72,12 @@ def upload(request):
                 if max_result < count:
                     max_result = count
             else:
-                max_result = request.GET['max']
+                max_result = int(request.GET['max'])
 
             if request.GET.get('last') is None:
                 last = db.get('210_last')
             else:
-                last = request.GET['last']
+                last = float(request.GET['last'])
 
             result = (last + (weight + count) / max_result) / 3
             db.set('210_last', result)
